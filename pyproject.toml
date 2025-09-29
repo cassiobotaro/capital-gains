@@ -1,0 +1,21 @@
+[project]
+name = "capital-gains"
+version = "0.1.0"
+description = "A Command-Line Interface (CLI) for calculating the tax due on profits or losses from stock market operations (or equity trading)"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
+
+[project.scripts]
+capital-gains = "capital_gains.cli:main"
+
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.18.2",
+    "pytest>=8.4.2",
+    "ruff>=0.13.2",
+]
