@@ -1,0 +1,56 @@
+[project]
+name = "capital-gains"
+version = "0.1.0"
+description = "A Command-Line Interface (CLI) for calculating the tax due on profits or losses from stock market operations (or equity trading)"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = []
+
+[project.scripts]
+capital-gains = "capital_gains.__main__:main"
+
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.18.2",
+    "pre-commit>=4.3.0",
+    "pytest>=8.4.2",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.13.2",
+]
+
+[tool.ruff.lint]
+select = [
+  # pycodestyle
+  "E4",
+  "E7",
+  "E9",
+  "W",
+  # pyflakes
+  "F",
+  # pyupgrade
+  "UP",
+  # isort
+  "I",
+  # mccabe
+  "C90",
+  # flake8-bandit
+  "S",
+  # flake8-annotations
+  "ANN",
+  # flake-pyi
+  "PYI",
+]
+ignore = ["ANN401"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = [
+  # use of assert detected
+  "S101"
+]
