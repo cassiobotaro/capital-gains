@@ -1,0 +1,13 @@
+.dockerignore
+.git
+__pycache__/
+*.py[co]
+build/
+dist/
+wheels/
+*.egg-info
+.venv/
+Dockerfile
+docker-compose.yml
+.github/
+.coverage
