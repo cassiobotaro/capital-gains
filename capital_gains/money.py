@@ -2,7 +2,6 @@ from collections.abc import Sequence
 from dataclasses import InitVar, dataclass, field
 from decimal import Decimal
 from functools import total_ordering
-from typing import Literal
 
 TWOPLACES = Decimal("0.01")
 DEFAULT_CURRENCY = "BRL"
@@ -44,7 +43,7 @@ class Money:
     def __truediv__(self, scalar: Scalar) -> Money:
         return Money(self.amount / Decimal(scalar), self.currency)
 
-    def __lt__(self, other: object) -> bool | Literal["NotImplemented"]:
+    def __lt__(self, other: object) -> bool:
         if not isinstance(other, Money):
             return NotImplemented
 
