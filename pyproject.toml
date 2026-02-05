@@ -15,11 +15,11 @@ build-backend = "setuptools.build_meta"
 
 [dependency-groups]
 dev = [
-    "mypy>=1.18.2",
     "prek>=0.2.29",
     "pytest>=8.4.2",
     "pytest-cov>=7.0.0",
     "ruff>=0.13.2",
+    "ty>=0.0.15",
 ]
 
 [tool.ruff.lint]
