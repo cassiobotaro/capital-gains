@@ -31,7 +31,7 @@ jobs:
         run: uv run ruff check .
 
       - name: Run ty check
-        run: uv run ty check
+        run: uv run zuban check
 
       - name: Run tests
         run: uv run pytest
