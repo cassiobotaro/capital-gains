@@ -12,8 +12,8 @@ repos:
       - id: ruff-format
   - repo: local
     hooks:
-      - id: ty
+      - id: zuban
         files: \.py$
-        name: ty check
-        entry: ty check . . --ignore unresolved-import
+        name: zuban check
+        entry: zuban check
         language: python
