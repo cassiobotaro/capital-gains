@@ -1,11 +1,21 @@
 import json
 from collections.abc import Iterable, Iterator
-from typing import IO
+from typing import IO, Literal, TypedDict
 
+from .money import Money
 from .tax import (
     Operation,
     OperationResult,
     process_operations_batch,
+)
+
+RawOperation = TypedDict(
+    "RawOperation",
+    {
+        "operation": Literal["sell", "buy"],
+        "unit-cost": float,
+        "quantity": int,
+    },
 )
 
 
@@ -16,8 +26,15 @@ def readlines(reader: Iterable[str]) -> Iterator[str]:
 
 
 def parse_json_line(line: str) -> list[Operation]:
-    raw_ops_list = json.loads(line)
-    return [Operation.from_dict(raw_ops) for raw_ops in raw_ops_list]
+    raw_ops_list: list[RawOperation] = json.loads(line)
+    return [
+        Operation(
+            operation=raw["operation"],
+            unit_cost=Money(str(raw["unit-cost"])),
+            quantity=raw["quantity"],
+        )
+        for raw in raw_ops_list
+    ]
 
 
 def dump_json(tax_list: list[OperationResult], output: IO[str]) -> None:

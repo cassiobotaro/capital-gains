@@ -1,18 +1,9 @@
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 from decimal import Decimal
-from typing import Literal, TypedDict, assert_never
+from typing import Literal, assert_never
 
 from capital_gains.money import Money
-
-RawOperation = TypedDict(
-    "RawOperation",
-    {
-        "operation": Literal["sell", "buy"],
-        "unit-cost": float,
-        "quantity": int,
-    },
-)
 
 TAX_RATE = Decimal("0.20")  # 20%
 EXEMPTION_LIMIT = Money("20000.00")  # R$ 20.000,00
@@ -36,14 +27,6 @@ class Operation:
     operation: Literal["sell", "buy"]
     unit_cost: Money
     quantity: int
-
-    @classmethod
-    def from_dict(cls, data: RawOperation) -> Operation:
-        return cls(
-            operation=data["operation"],
-            unit_cost=Money(str(data["unit-cost"])),
-            quantity=data["quantity"],
-        )
 
 
 def handle_buy(state: InvestmentState, operation: Operation) -> OperationResult:
