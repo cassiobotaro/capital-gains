@@ -12,8 +12,9 @@ repos:
       - id: ruff-format
   - repo: local
     hooks:
-      - id: zuban
+      - id: ty
         files: \.py$
-        name: zuban check
-        entry: zuban check
-        language: python
+        name: ty check
+        entry: uv run ty check
+        language: system
+        pass_filenames: false
