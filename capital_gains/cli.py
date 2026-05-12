@@ -1,6 +1,7 @@
 import json
 from collections.abc import Iterable, Iterator
-from typing import IO, Literal, TypedDict
+from io import Writer
+from typing import Literal, TypedDict
 
 from .money import Money
 from .tax import (
@@ -37,7 +38,7 @@ def parse_json_line(line: str) -> list[Operation]:
     ]
 
 
-def dump_json(tax_list: list[OperationResult], output: IO[str]) -> None:
+def dump_json(tax_list: list[OperationResult], output: Writer[str]) -> None:
     formatted_list = [{"tax": float(res.tax.amount)} for res in tax_list]
 
     json.dump(formatted_list, output)
@@ -46,7 +47,7 @@ def dump_json(tax_list: list[OperationResult], output: IO[str]) -> None:
 
 def process_operations(
     reader_stream: Iterable[str],
-    writer_stream: IO[str],
+    writer_stream: Writer[str],
 ) -> None:
     # functional style
     # deque hack can be used to consume lazy map without create a list

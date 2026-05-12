@@ -92,3 +92,13 @@ While simply returning the final calculated tax is sufficient for the primary go
 The design decision was made to return a **detailed result object** for *each step* of the operation processing, rather than just the final tax amount. This result object contains not only the final **`tax`** but also the **`new_state`** and potentially other intermediate values (like **`profit_calculated`** or **`loss_applied`**). This enables the calling method to **audit** or **validate** every step of the calculation, significantly increasing the system's transparency and debuggability.
 
 ---
+
+### Problem
+
+The CLI functions that consume or produce streams were typed using **`IO[str]`**, which exposes the full IO interface (read, write, seek, close, etc.). This is more permissive than necessary: `dump_json` only needs to call `write()` on its output, and any caller-supplied object satisfying just that contract should be accepted. Using `IO[str]` unnecessarily narrows the set of acceptable arguments and couples the signature to the full file-like protocol.
+
+### Solution
+
+The argument types were narrowed to the **`io.Writer`** protocol (and analogously `io.Reader` where applicable), following the rationale: *"The protocols `io.Reader` and `io.Writer` offer a simpler alternative for argument types, when only the `read()` or `write()` methods are accessed."* This makes the signatures express exactly what the functions require, enabling any object that implements just `write()` to be passed in, and improving both readability and testability.
+
+---
