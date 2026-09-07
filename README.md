@@ -8,9 +8,9 @@ A Command-Line Interface (CLI) for calculating the tax due on profits or losses 
 
   - [Python](https://www.python.org/)
   - [uv](https://docs.astral.sh/uv/)
-  - [pre-commit (development only)](https://www.google.com/search?q=)
+  - [prek (development only)](https://prek.j178.dev/)
 
-The command `pre-commit install` is required before making any changes to the code.
+The command `prek install` is required before making any changes to the code.
 With every new **commit**, the code will be adjusted according to the pre-defined styles.
 
 ## How to Run the Project
@@ -73,9 +73,9 @@ docker container run --interactive capital_gains:test pytest
 
 ## Code Styles
 
-The code has been consistently checked and formatted using the **Ruff** tool (which combines linter and formatting functionalities). Additionally, types have been verified using the **mypy** tool.
+The code has been consistently checked and formatted using the **Ruff** tool (which combines linter and formatting functionalities). Additionally, types have been verified using the **ty** tool.
 
-The **pre-commit** tool will ensure your code adheres to the styles defined in the project.
+The **prek** tool will ensure your code adheres to the styles defined in the project.
 
 ## Notes
 

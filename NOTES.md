@@ -78,8 +78,8 @@ There was a risk of introducing subtle bugs and reducing code quality due to the
 
 To ensure type consistency and quality, the following tools were integrated:
 
-1.  **Mypy**: This tool was adopted to perform **static type checking**, ensuring that all type hints are respected and catching type-related errors before the code is executed.
-2.  **Tooling for consistent style using linter and pre-commit**: Linters were configured to enforce a unified coding style. These tools were integrated with **pre-commit hooks** to automatically check and format code before every commit, guaranteeing that all changes adhere to the defined style and quality standards.
+1.  **ty**: This tool was adopted to perform **static type checking**, ensuring that all type hints are respected and catching type-related errors before the code is executed.
+2.  **Tooling for consistent style using linter and prek**: Linters were configured to enforce a unified coding style. These tools were integrated with **prek** (a fast pre-commit hooks runner) to automatically check and format code before every commit, guaranteeing that all changes adhere to the defined style and quality standards.
 
 ---
 
@@ -89,7 +89,7 @@ While simply returning the final calculated tax is sufficient for the primary go
 
 ### Solution
 
-The design decision was made to return a **detailed result object** for *each step* of the operation processing, rather than just the final tax amount. This result object contains not only the final **`tax`** but also the **`new_state`** and potentially other intermediate values (like **`profit_calculated`** or **`loss_applied`**). This enables the calling method to **audit** or **validate** every step of the calculation, significantly increasing the system's transparency and debuggability.
+The design decision was made to return a **detailed result object** for *each step* of the operation processing, rather than just the final tax amount. This result object (**`OperationResult`**) contains not only the final **`tax`** but also the **`new_state`**, which carries the updated **`quantity`**, **`weighted_average_price`** and **`accumulated_loss`**. This enables the calling method to **audit** or **validate** every step of the calculation, significantly increasing the system's transparency and debuggability.
 
 ---
 
