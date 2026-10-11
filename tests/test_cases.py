@@ -5,9 +5,8 @@ import pytest
 from capital_gains.money import Money
 from capital_gains.tax import Operation, process_operations_batch
 
-test_cases = [
-    (
-        # case 1
+CASES = [
+    pytest.param(
         [
             Operation(kind="buy", unit_cost=Money(Decimal("10.00")), quantity=100),
             Operation(kind="sell", unit_cost=Money(Decimal("15.00")), quantity=50),
@@ -18,9 +17,9 @@ test_cases = [
             Money.zero(),
             Money.zero(),
         ],
+        id="case-1",
     ),
-    (
-        # case 2
+    pytest.param(
         [
             Operation(kind="buy", unit_cost=Money(Decimal("10.00")), quantity=10_000),
             Operation(kind="sell", unit_cost=Money(Decimal("20.00")), quantity=5_000),
@@ -31,9 +30,9 @@ test_cases = [
             Money(Decimal("10000.00")),
             Money.zero(),
         ],
+        id="case-2",
     ),
-    (
-        # case 3
+    pytest.param(
         [
             Operation(kind="buy", unit_cost=Money(Decimal("10.00")), quantity=10_000),
             Operation(kind="sell", unit_cost=Money(Decimal("5.00")), quantity=5_000),
@@ -44,9 +43,9 @@ test_cases = [
             Money.zero(),
             Money(Decimal("1000.00")),
         ],
+        id="case-3",
     ),
-    (
-        # case 4
+    pytest.param(
         [
             Operation(kind="buy", unit_cost=Money(Decimal("10.00")), quantity=10_000),
             Operation(kind="buy", unit_cost=Money(Decimal("25.00")), quantity=5_000),
@@ -57,9 +56,9 @@ test_cases = [
             Money.zero(),
             Money.zero(),
         ],
+        id="case-4",
     ),
-    (
-        # case 5
+    pytest.param(
         [
             Operation(kind="buy", unit_cost=Money(Decimal("10.00")), quantity=10_000),
             Operation(kind="buy", unit_cost=Money(Decimal("25.00")), quantity=5_000),
@@ -72,9 +71,9 @@ test_cases = [
             Money.zero(),
             Money(Decimal("10000.00")),
         ],
+        id="case-5",
     ),
-    (
-        # case 6
+    pytest.param(
         [
             Operation(kind="buy", unit_cost=Money(Decimal("10.00")), quantity=10_000),
             Operation(kind="sell", unit_cost=Money(Decimal("2.00")), quantity=5_000),
@@ -89,9 +88,9 @@ test_cases = [
             Money.zero(),
             Money(Decimal("3000.00")),
         ],
+        id="case-6",
     ),
-    (
-        # case 7
+    pytest.param(
         [
             Operation(kind="buy", unit_cost=Money(Decimal("10.00")), quantity=10_000),
             Operation(kind="sell", unit_cost=Money(Decimal("2.00")), quantity=5_000),
@@ -114,9 +113,9 @@ test_cases = [
             Money(Decimal("3700.00")),
             Money.zero(),
         ],
+        id="case-7",
     ),
-    (
-        # case 8
+    pytest.param(
         [
             Operation(kind="buy", unit_cost=Money(Decimal("10.00")), quantity=10_000),
             Operation(kind="sell", unit_cost=Money(Decimal("50.00")), quantity=10_000),
@@ -129,11 +128,12 @@ test_cases = [
             Money.zero(),
             Money(Decimal("60000.00")),
         ],
+        id="case-8",
     ),
 ]
 
 
-@pytest.mark.parametrize("operations_batch, expected_taxes", test_cases)
+@pytest.mark.parametrize("operations_batch, expected_taxes", CASES)
 def test_process_operations_taxes(
     operations_batch: list[Operation], expected_taxes: list[Money]
 ) -> None:
