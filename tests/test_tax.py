@@ -113,7 +113,7 @@ def test_sell_with_simple_profit_above_exemption_limit() -> None:
     assert result.new_state.quantity == 0
     assert result.new_state.weighted_average_price == Money(Decimal("30.00"))
     assert result.new_state.accumulated_loss == Money.zero()
-    # A verificação usa o resultado do cálculo dinâmico:
+    # expected_tax is derived from TAX_RATE above rather than hard-coded
     assert result.tax == expected_tax
 
 

@@ -69,7 +69,7 @@ def test_dump_json_serializes_and_adds_newline() -> None:
 def test_process_operations_integrates_full_pipeline() -> None:
     input_data = [
         '[{"operation":"buy", "unit-cost":10.00, "quantity": 1000}]\n',
-        "\n",  # Linha ignorada
+        "\n",  # blank line, skipped
         '[{"operation":"sell", "unit-cost":50.00, "quantity": 10}]\n',
     ]
     reader_stream = io.StringIO("".join(input_data))
