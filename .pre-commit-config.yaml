@@ -5,10 +5,10 @@ repos:
       - id: check-yaml
       - id: end-of-file-fixer
       - id: trailing-whitespace
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
+  - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.17.0
     hooks:
-      - id: ruff
+      - id: ruff-check
       - id: ruff-format
   - repo: local
     hooks:

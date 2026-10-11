@@ -19,7 +19,7 @@ dev = [
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
     "ruff>=0.17.0",
-    "ty>=0.0.85",
+    "ty>=0.0.86",
 ]
 
 [tool.ruff.lint]
