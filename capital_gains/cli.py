@@ -1,5 +1,6 @@
 import json
 from collections.abc import Iterable, Iterator
+from decimal import Decimal
 from io import Writer
 from typing import Literal, TypedDict
 
@@ -31,7 +32,7 @@ def parse_json_line(line: str) -> list[Operation]:
     return [
         Operation(
             operation=raw["operation"],
-            unit_cost=Money(str(raw["unit-cost"])),
+            unit_cost=Money(Decimal(str(raw["unit-cost"]))),
             quantity=raw["quantity"],
         )
         for raw in raw_ops_list

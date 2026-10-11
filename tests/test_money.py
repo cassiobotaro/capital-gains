@@ -1,3 +1,4 @@
+from dataclasses import replace
 from decimal import Decimal
 
 import pytest
@@ -10,6 +11,16 @@ class TestMoney:
         money = Money(Decimal("10.00"))
         assert money.amount == Decimal("10.00")
         assert money.currency == DEFAULT_CURRENCY
+
+    def test_should_accept_amount_as_keyword(self) -> None:
+        money = Money(amount=Decimal("10.00"), currency="BRL")
+        assert money == Money(Decimal("10.00"), "BRL")
+
+    def test_should_support_dataclass_replace(self) -> None:
+        money = Money(Decimal("10.00"), "BRL")
+
+        assert replace(money, currency="USD") == Money(Decimal("10.00"), "USD")
+        assert replace(money, amount=Decimal("5.555")) == Money(Decimal("5.56"), "BRL")
 
     def test_should_round_amount_to_two_decimal_places(self) -> None:
         money = Money(Decimal("10.123"), "BRL")

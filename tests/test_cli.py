@@ -1,5 +1,6 @@
 import io
 import json
+from decimal import Decimal
 
 import pytest
 
@@ -40,13 +41,13 @@ def test_parse_json_line_converts_to_domain_objects() -> None:
     operations = parse_json_line(input_json)
 
     assert operations == [
-        Operation(operation="buy", unit_cost=Money("15.50"), quantity=100)
+        Operation(operation="buy", unit_cost=Money(Decimal("15.50")), quantity=100)
     ]
 
 
 def test_dump_json_serializes_and_adds_newline() -> None:
-    tax_result_1 = OperationResult(INITIAL_INVESTMENT, tax=Money(123.456))
-    tax_result_2 = OperationResult(INITIAL_INVESTMENT, tax=Money(0))
+    tax_result_1 = OperationResult(INITIAL_INVESTMENT, tax=Money(Decimal("123.456")))
+    tax_result_2 = OperationResult(INITIAL_INVESTMENT, tax=Money.zero())
     tax_list = [tax_result_1, tax_result_2]
 
     output_stream = io.StringIO()
