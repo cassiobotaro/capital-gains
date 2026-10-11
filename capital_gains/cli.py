@@ -50,16 +50,6 @@ def process_operations(
     reader_stream: Iterable[str],
     writer_stream: Writer[str],
 ) -> None:
-    # functional style
-    # deque hack can be used to consume lazy map without create a list
-    # this will reduce memory footprint
-    # deque(
-    #     map(
-    #         partial(dump_json, output=writer_stream),
-    #         map(calculate_taxes, map(parse_json_line, readlines(reader_stream))),
-    #     ),
-    #     maxlen=0,
-    # )
     for line in readlines(reader_stream):
         dump_json(
             process_operations_batch(parse_json_line(line)),
