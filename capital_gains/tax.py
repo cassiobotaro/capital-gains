@@ -22,9 +22,12 @@ class OperationResult:
     tax: Money
 
 
+type OperationKind = Literal["buy", "sell"]
+
+
 @dataclass(frozen=True)
 class Operation:
-    operation: Literal["sell", "buy"]
+    kind: OperationKind
     unit_cost: Money
     quantity: int
 
@@ -70,7 +73,7 @@ def handle_sell(state: InvestmentState, operation: Operation) -> OperationResult
 
 
 def process_operation(state: InvestmentState, operation: Operation) -> OperationResult:
-    match operation.operation:
+    match operation.kind:
         case "buy":
             return handle_buy(state, operation)
         case "sell":
@@ -86,9 +89,9 @@ def process_operations_batch(
     operations: Iterable[Operation], initial_state: InvestmentState = INITIAL_INVESTMENT
 ) -> list[OperationResult]:
     current_state = initial_state
-    taxes: list[OperationResult] = []
+    results: list[OperationResult] = []
     for operation in operations:
         result = process_operation(current_state, operation)
-        taxes.append(result)
+        results.append(result)
         current_state = result.new_state
-    return taxes
+    return results

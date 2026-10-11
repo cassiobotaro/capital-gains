@@ -56,7 +56,7 @@ def test_first_buy_sets_initial_weighted_average() -> None:
     quantity = 10
 
     operation = Operation(
-        operation="buy",
+        kind="buy",
         unit_cost=unit_price,
         quantity=quantity,
     )
@@ -83,7 +83,7 @@ def test_multiple_buys_calculate_weighted_average() -> None:
         quantity=5, weighted_average_price=Money(Decimal("20.00"))
     )
     operation = Operation(
-        operation="buy",
+        kind="buy",
         unit_cost=Money(Decimal("10.00")),
         quantity=5,
     )
@@ -104,7 +104,7 @@ def test_sell_with_simple_profit_above_exemption_limit() -> None:
         quantity=1000, weighted_average_price=Money(Decimal("30.00"))
     )
     operation = Operation(
-        operation="sell",
+        kind="sell",
         unit_cost=Money(Decimal("35.00")),
         quantity=1000,
     )
@@ -131,7 +131,7 @@ def test_sell_with_exemption_due_to_low_volume() -> None:
         quantity=100, weighted_average_price=Money(Decimal("50.00"))
     )
     operation = Operation(
-        operation="sell",
+        kind="sell",
         unit_cost=Money(Decimal("60.00")),
         quantity=100,
     )
@@ -160,7 +160,7 @@ def test_sell_with_loss_generates_accumulated_loss() -> None:
 
     # arrange
     operation = Operation(
-        operation="sell",
+        kind="sell",
         unit_cost=Money(Decimal("45.00")),
         quantity=100,
     )
@@ -191,7 +191,7 @@ def test_sell_with_profit_fully_compensated_by_accumulated_loss() -> None:
         accumulated_loss=initial_loss,
     )
     operation = Operation(
-        operation="sell",
+        kind="sell",
         unit_cost=Money(Decimal("12.00")),
         quantity=500,
     )
@@ -224,7 +224,7 @@ def test_sell_with_profit_partially_compensated_by_accumulated_loss() -> None:
         accumulated_loss=initial_loss,
     )
     operation = Operation(
-        operation="sell",
+        kind="sell",
         unit_cost=Money(Decimal("32.50")),
         quantity=2000,
     )
@@ -253,7 +253,7 @@ def test_sell_with_profit_exempt_but_compensating_loss() -> None:
         accumulated_loss=initial_loss,
     )
     operation = Operation(
-        operation="sell",
+        kind="sell",
         unit_cost=Money(Decimal("42.50")),
         quantity=200,
     )
@@ -280,7 +280,7 @@ def test_sell_above_exemption_limit_but_net_profit_is_zero() -> None:
         accumulated_loss=initial_loss,
     )
     operation = Operation(
-        operation="sell",
+        kind="sell",
         unit_cost=Money(Decimal("33.00")),
         quantity=1000,
     )
@@ -304,7 +304,7 @@ def test_full_sequence_of_operations_and_state_management() -> None:
     current_state = InvestmentState()
     total_tax_paid = Money.zero()
 
-    op1 = Operation(operation="buy", unit_cost=Money(Decimal("10.00")), quantity=100)
+    op1 = Operation(kind="buy", unit_cost=Money(Decimal("10.00")), quantity=100)
     result1 = process_operation(current_state, op1)
 
     assert result1.new_state.quantity == 100
@@ -312,7 +312,7 @@ def test_full_sequence_of_operations_and_state_management() -> None:
     assert result1.tax == Money.zero()
     current_state = result1.new_state
 
-    op2 = Operation(operation="buy", unit_cost=Money(Decimal("20.00")), quantity=100)
+    op2 = Operation(kind="buy", unit_cost=Money(Decimal("20.00")), quantity=100)
     result2 = process_operation(current_state, op2)
 
     assert result2.new_state.quantity == 200
@@ -320,7 +320,7 @@ def test_full_sequence_of_operations_and_state_management() -> None:
     assert result2.tax == Money.zero()
     current_state = result2.new_state
 
-    op3 = Operation(operation="sell", unit_cost=Money(Decimal("12.00")), quantity=100)
+    op3 = Operation(kind="sell", unit_cost=Money(Decimal("12.00")), quantity=100)
     result3 = process_operation(current_state, op3)
 
     assert result3.new_state.quantity == 100
@@ -328,7 +328,7 @@ def test_full_sequence_of_operations_and_state_management() -> None:
     assert result3.tax == Money.zero()
     current_state = result3.new_state
 
-    op4 = Operation(operation="sell", unit_cost=Money(Decimal("30.00")), quantity=100)
+    op4 = Operation(kind="sell", unit_cost=Money(Decimal("30.00")), quantity=100)
     result4 = process_operation(current_state, op4)
 
     assert result4.tax == Money.zero(), "Tax must be zero due to low volume exemption."
@@ -344,10 +344,10 @@ def test_full_sequence_of_operations_and_state_management() -> None:
 def test_process_operations_batch_extracts_taxes() -> None:
     # arrange
     operations_batch = [
-        Operation(operation="buy", unit_cost=Money(Decimal("10.00")), quantity=100),
-        Operation(operation="buy", unit_cost=Money(Decimal("20.00")), quantity=100),
-        Operation(operation="sell", unit_cost=Money(Decimal("12.00")), quantity=100),
-        Operation(operation="sell", unit_cost=Money(Decimal("30.00")), quantity=100),
+        Operation(kind="buy", unit_cost=Money(Decimal("10.00")), quantity=100),
+        Operation(kind="buy", unit_cost=Money(Decimal("20.00")), quantity=100),
+        Operation(kind="sell", unit_cost=Money(Decimal("12.00")), quantity=100),
+        Operation(kind="sell", unit_cost=Money(Decimal("30.00")), quantity=100),
     ]
     expected_taxes = [
         Money.zero(),
@@ -373,7 +373,7 @@ def test_sell_partial_with_loss_accumulates_loss() -> None:
         accumulated_loss=Money(Decimal("100.00")),
     )
     operation = Operation(
-        operation="sell",
+        kind="sell",
         unit_cost=Money(Decimal("45.00")),
         quantity=50,
     )
@@ -406,7 +406,7 @@ def test_sell_partial_with_profit_above_tax_limit() -> None:
         accumulated_loss=Money.zero(),
     )
     operation = Operation(
-        operation="sell",
+        kind="sell",
         unit_cost=Money(Decimal("60.00")),
         quantity=500,
     )
@@ -437,7 +437,7 @@ def test_sell_with_profit_exempt_and_accumulated_loss_fully_zeroed() -> None:
         accumulated_loss=Money(Decimal("500.00")),
     )
     operation = Operation(
-        operation="sell",
+        kind="sell",
         unit_cost=Money(Decimal("48.00")),
         quantity=100,
     )
@@ -467,7 +467,7 @@ def test_buy_zero_quantity_does_not_change_state() -> None:
         accumulated_loss=Money(Decimal("500.00")),
     )
     operation = Operation(
-        operation="buy",
+        kind="buy",
         unit_cost=Money(Decimal("100.00")),
         quantity=0,
     )
@@ -496,20 +496,20 @@ def test_buy_zero_quantity_does_not_change_state() -> None:
 def test_full_sequence_of_operations_with_final_taxable_sale() -> None:
     current_state = InvestmentState()
 
-    op1 = Operation(operation="buy", unit_cost=Money(Decimal("10.00")), quantity=100)
+    op1 = Operation(kind="buy", unit_cost=Money(Decimal("10.00")), quantity=100)
     result1 = process_operation(current_state, op1)
     current_state = result1.new_state
 
-    op2 = Operation(operation="buy", unit_cost=Money(Decimal("20.00")), quantity=100)
+    op2 = Operation(kind="buy", unit_cost=Money(Decimal("20.00")), quantity=100)
     result2 = process_operation(current_state, op2)
     current_state = result2.new_state
 
-    op3 = Operation(operation="sell", unit_cost=Money(Decimal("12.00")), quantity=100)
+    op3 = Operation(kind="sell", unit_cost=Money(Decimal("12.00")), quantity=100)
     result3 = process_operation(current_state, op3)
     current_state = result3.new_state
     assert current_state.accumulated_loss == Money(Decimal("300.00"))
 
-    op4 = Operation(operation="sell", unit_cost=Money(Decimal("30.00")), quantity=100)
+    op4 = Operation(kind="sell", unit_cost=Money(Decimal("30.00")), quantity=100)
     result4 = process_operation(current_state, op4)
     current_state = result4.new_state
     assert result4.tax == Money.zero(), "Tax must be zero due to low volume exemption."
@@ -517,13 +517,13 @@ def test_full_sequence_of_operations_with_final_taxable_sale() -> None:
         "Accumulated loss must be zeroed."
     )
 
-    op5 = Operation(operation="buy", unit_cost=Money(Decimal("20.00")), quantity=500)
+    op5 = Operation(kind="buy", unit_cost=Money(Decimal("20.00")), quantity=500)
     result5 = process_operation(current_state, op5)
     current_state = result5.new_state
     assert current_state.quantity == 500
     assert current_state.weighted_average_price == Money(Decimal("20.00"))
 
-    op6 = Operation(operation="sell", unit_cost=Money(Decimal("70.00")), quantity=500)
+    op6 = Operation(kind="sell", unit_cost=Money(Decimal("70.00")), quantity=500)
     result6 = process_operation(current_state, op6)
 
     expected_tax = Money(Decimal("5000.00"))

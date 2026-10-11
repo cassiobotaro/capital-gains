@@ -2,11 +2,12 @@ import json
 from collections.abc import Iterable, Iterator
 from decimal import Decimal
 from io import Writer
-from typing import Literal, TypedDict
+from typing import TypedDict
 
 from .money import Money
 from .tax import (
     Operation,
+    OperationKind,
     OperationResult,
     process_operations_batch,
 )
@@ -14,7 +15,7 @@ from .tax import (
 RawOperation = TypedDict(
     "RawOperation",
     {
-        "operation": Literal["sell", "buy"],
+        "operation": OperationKind,
         "unit-cost": float,
         "quantity": int,
     },
@@ -31,7 +32,7 @@ def parse_json_line(line: str) -> list[Operation]:
     raw_ops_list: list[RawOperation] = json.loads(line)
     return [
         Operation(
-            operation=raw["operation"],
+            kind=raw["operation"],
             unit_cost=Money(Decimal(str(raw["unit-cost"]))),
             quantity=raw["quantity"],
         )
@@ -46,7 +47,7 @@ def dump_json(tax_list: list[OperationResult], output: Writer[str]) -> None:
     output.write("\n")
 
 
-def process_operations(
+def run(
     reader_stream: Iterable[str],
     writer_stream: Writer[str],
 ) -> None:

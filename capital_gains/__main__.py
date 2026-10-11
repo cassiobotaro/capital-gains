@@ -1,10 +1,10 @@
 import sys
 
-from .cli import process_operations
+from .cli import run
 
 
 def main() -> None:
-    process_operations(sys.stdin, sys.stdout)
+    run(sys.stdin, sys.stdout)
 
 
 if __name__ == "__main__":
