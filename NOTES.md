@@ -42,6 +42,16 @@ Crucially, each operation processing step takes an initial investment state and 
 
 ### Problem
 
+Binary floating point cannot represent most decimal fractions exactly. `Decimal(1.005)` is `1.00499999...`, so a `Money` built from or multiplied by a float can round the wrong way before the two-place rounding ever runs. The CLI already converts the JSON input through `str` before building a `Decimal`, but nothing stopped another caller from passing a float directly.
+
+### Solution
+
+`Money` accepts only `Decimal` for its amount, and the `Scalar` type used by `*` and `/` is `int | Decimal`. The operators check the operand at runtime and return `NotImplemented` for anything else, so `Money * 0.5` raises a `TypeError` instead of silently going through float. Callers must spell out `Decimal("0.5")`, which makes the precision explicit at the call site.
+
+---
+
+### Problem
+
 An excessive repetition of code and the introduction of magic values were identified when initializing or returning monetary values equal to zero (e.g., `Money(amount=0.00)`). This repetition negatively impacts code readability and maintainability.
 
 ### Solution

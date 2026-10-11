@@ -6,6 +6,7 @@ TWOPLACES = Decimal("0.01")
 DEFAULT_CURRENCY = "BRL"
 
 type Scalar = int | Decimal
+SCALAR_TYPES = (int, Decimal)
 
 
 @dataclass(frozen=True)
@@ -32,12 +33,18 @@ class Money:
         return Money(self.amount - other.amount, self.currency)
 
     def __mul__(self, scalar: Scalar) -> Money:
-        return Money(self.amount * Decimal(scalar), self.currency)
+        if not isinstance(scalar, SCALAR_TYPES):
+            return NotImplemented
+
+        return Money(self.amount * scalar, self.currency)
 
     __rmul__ = __mul__
 
     def __truediv__(self, scalar: Scalar) -> Money:
-        return Money(self.amount / Decimal(scalar), self.currency)
+        if not isinstance(scalar, SCALAR_TYPES):
+            return NotImplemented
+
+        return Money(self.amount / scalar, self.currency)
 
     def __lt__(self, other: object) -> bool:
         if not isinstance(other, Money):
