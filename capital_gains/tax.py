@@ -33,14 +33,18 @@ class Operation:
 
 
 def handle_buy(state: InvestmentState, operation: Operation) -> OperationResult:
+    total_quantity = state.quantity + operation.quantity
+    if total_quantity == 0:
+        return OperationResult(new_state=state, tax=Money.zero())
+
     return OperationResult(
         new_state=InvestmentState(
-            quantity=state.quantity + operation.quantity,
+            quantity=total_quantity,
             weighted_average_price=(
                 (state.weighted_average_price * state.quantity)
                 + (operation.unit_cost * operation.quantity)
             )
-            / (state.quantity + operation.quantity),
+            / total_quantity,
             accumulated_loss=state.accumulated_loss,
         ),
         tax=Money.zero(),
