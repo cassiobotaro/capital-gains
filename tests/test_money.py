@@ -51,6 +51,18 @@ class TestMoney:
         with pytest.raises(ValueError):
             _ = money1 - money2
 
+    def test_different_type_should_not_be_summable_or_subtractable(self) -> None:
+        money = Money(Decimal("10.00"), "BRL")
+        an_object = 42
+        with pytest.raises(TypeError):
+            _ = money + an_object  # ty: ignore[unsupported-operator]
+        with pytest.raises(TypeError):
+            _ = an_object + money  # ty: ignore[unsupported-operator]
+        with pytest.raises(TypeError):
+            _ = money - an_object  # ty: ignore[unsupported-operator]
+        with pytest.raises(TypeError):
+            _ = an_object - money  # ty: ignore[unsupported-operator]
+
     @pytest.mark.parametrize(
         "scalar, expected",
         [

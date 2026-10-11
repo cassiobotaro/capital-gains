@@ -25,10 +25,16 @@ class Money:
             )
 
     def __add__(self, other: Money) -> Money:
+        if not isinstance(other, Money):
+            return NotImplemented
+
         self._assert_same_currency_as(other)
         return Money(self.amount + other.amount, self.currency)
 
     def __sub__(self, other: Money) -> Money:
+        if not isinstance(other, Money):
+            return NotImplemented
+
         self._assert_same_currency_as(other)
         return Money(self.amount - other.amount, self.currency)
 
