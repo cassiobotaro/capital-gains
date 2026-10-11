@@ -15,7 +15,7 @@ from capital_gains.tax import (
 
 
 @pytest.mark.parametrize(
-    "taxable_profit, total_operation_value, expected_tax",
+    ("taxable_profit", "total_operation_value", "expected_tax"),
     [
         pytest.param(
             Money(Decimal("1000.00")),
