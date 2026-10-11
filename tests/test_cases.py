@@ -138,7 +138,7 @@ def test_process_operations_taxes(
     operations_batch: list[Operation], expected_taxes: list[Money]
 ) -> None:
     # act
-    results_list = process_operations_batch(operations_batch)
+    results_list = list(process_operations_batch(operations_batch))
     actual_taxes = [result.tax for result in results_list]
 
     # assert
