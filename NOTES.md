@@ -132,3 +132,23 @@ The specification's examples print the tax with two decimal places, such as `{"t
 The output stays a JSON number produced by `float` and the cosmetic difference is accepted. The values are numerically identical to the examples, so any consumer that parses the JSON gets the same result. Precision is not at risk: the `Money` object has already rounded the amount to two places before the conversion, so the `float` never carries more digits than the `Decimal` had. The alternatives were rejected because each trades a single `json.dump` call for something worse: serializing as a string changes the field type and breaks numeric comparisons; building the JSON by hand replaces the encoder with formatting code that has to be maintained; and a `float` subclass with a custom `__repr__` relies on an implementation detail of the C encoder.
 
 ---
+
+### Problem
+
+`process_operations` is a pipeline: read lines, parse each one, process the batch, dump the result. A functional style was considered, chaining lazy `map` calls and consuming the result through a `deque` with `maxlen=0` so that no intermediate list is ever built:
+
+```python
+deque(
+    map(
+        partial(dump_json, output=writer_stream),
+        map(process_operations_batch, map(parse_json_line, readlines(reader_stream))),
+    ),
+    maxlen=0,
+)
+```
+
+### Solution
+
+The explicit `for` loop was kept. It is equally lazy, since `readlines` is a generator and each line is parsed, processed and written before the next one is read, so the memory footprint is the same. The loop reads top to bottom without requiring the reader to know the `deque(maxlen=0)` idiom, and it does not need `functools.partial` to bind the output stream. The functional version is recorded here rather than left as a comment in the code, where it had already drifted out of sync with the function names it referenced.
+
+---
