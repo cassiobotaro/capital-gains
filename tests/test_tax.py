@@ -445,6 +445,23 @@ def test_buy_zero_quantity_does_not_change_state() -> None:
     assert result.new_state.accumulated_loss == expected_loss
 
 
+def test_buy_zero_quantity_on_empty_position_does_not_divide_by_zero() -> None:
+    # arrange
+    initial_state = InvestmentState()
+    operation = Operation(
+        kind="buy",
+        unit_cost=Money(Decimal("100.00")),
+        quantity=0,
+    )
+
+    # act
+    result = process_operation(initial_state, operation)
+
+    # assert
+    assert result.tax == Money.zero()
+    assert result.new_state == initial_state
+
+
 def test_full_sequence_of_operations_with_final_taxable_sale() -> None:
     current_state = InvestmentState()
 
