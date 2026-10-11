@@ -112,3 +112,13 @@ The CLI functions that consume or produce streams were typed using **`IO[str]`**
 The argument types were narrowed to the **`io.Writer`** protocol (and analogously `io.Reader` where applicable), following the rationale: *"The protocols `io.Reader` and `io.Writer` offer a simpler alternative for argument types, when only the `read()` or `write()` methods are accessed."* This makes the signatures express exactly what the functions require, enabling any object that implements just `write()` to be passed in, and improving both readability and testability.
 
 ---
+
+### Problem
+
+The specification only says to round monetary values to the second decimal place, without naming a rounding mode. `Decimal.quantize` uses the context default, `ROUND_HALF_EVEN` (banker's rounding), so an exact tie such as `10.025` becomes `10.02` rather than the `10.03` many readers expect from school rounding. The tie is reachable through the weighted average price: buying 1 share at 10.00 and then 1 at 10.05 gives exactly `10.025`. The tax itself can never hit a tie, because a two-place profit multiplied by 0.20 always ends in an even digit.
+
+### Solution
+
+Banker's rounding was kept as a deliberate choice. It is the `Decimal` default, it is the mode recommended by IEEE 754 for monetary work because it does not bias totals upward over many operations, and the specification's own examples (`16.67`, `3700.00`) are unaffected by the choice. The trade-off is that a weighted average ending in an exact 5 at the third decimal place rounds to the nearest even cent. Should a reviewer or future requirement prefer `ROUND_HALF_UP`, the change is a single `rounding=` argument in `Money.__post_init__`.
+
+---
