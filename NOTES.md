@@ -122,3 +122,13 @@ The specification only says to round monetary values to the second decimal place
 Banker's rounding was kept as a deliberate choice. It is the `Decimal` default, it is the mode recommended by IEEE 754 for monetary work because it does not bias totals upward over many operations, and the specification's own examples (`16.67`, `3700.00`) are unaffected by the choice. The trade-off is that a weighted average ending in an exact 5 at the third decimal place rounds to the nearest even cent. Should a reviewer or future requirement prefer `ROUND_HALF_UP`, the change is a single `rounding=` argument in `Money.__post_init__`.
 
 ---
+
+### Problem
+
+The specification's examples print the tax with two decimal places, such as `{"tax": 0.00}` and `{"tax": 10000.00}`. JSON numbers carry no notion of decimal places, and the standard library encoder only accepts `float` as a non-integer numeric type. Converting the `Decimal` amount to `float` therefore prints `{"tax": 0.0}` and `{"tax": 10000.0}`, which differ from the examples only in how trailing zeros are shown.
+
+### Solution
+
+The output stays a JSON number produced by `float` and the cosmetic difference is accepted. The values are numerically identical to the examples, so any consumer that parses the JSON gets the same result. Precision is not at risk: the `Money` object has already rounded the amount to two places before the conversion, so the `float` never carries more digits than the `Decimal` had. The alternatives were rejected because each trades a single `json.dump` call for something worse: serializing as a string changes the field type and breaks numeric comparisons; building the JSON by hand replaces the encoder with formatting code that has to be maintained; and a `float` subclass with a custom `__repr__` relies on an implementation detail of the C encoder.
+
+---
