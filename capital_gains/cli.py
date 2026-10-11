@@ -40,7 +40,7 @@ def parse_json_line(line: str) -> list[Operation]:
     ]
 
 
-def dump_json(tax_list: list[OperationResult], output: Writer[str]) -> None:
+def dump_json(tax_list: Iterable[OperationResult], output: Writer[str]) -> None:
     formatted_list = [{"tax": float(res.tax.amount)} for res in tax_list]
 
     json.dump(formatted_list, output)

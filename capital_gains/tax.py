@@ -1,4 +1,4 @@
-from collections.abc import Iterable
+from collections.abc import Iterable, Iterator
 from dataclasses import dataclass, field
 from decimal import Decimal
 from typing import Literal, assert_never
@@ -87,11 +87,9 @@ INITIAL_INVESTMENT = InvestmentState()
 
 def process_operations_batch(
     operations: Iterable[Operation], initial_state: InvestmentState = INITIAL_INVESTMENT
-) -> list[OperationResult]:
+) -> Iterator[OperationResult]:
     current_state = initial_state
-    results: list[OperationResult] = []
     for operation in operations:
         result = process_operation(current_state, operation)
-        results.append(result)
+        yield result
         current_state = result.new_state
-    return results
