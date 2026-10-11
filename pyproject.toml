@@ -7,7 +7,7 @@ requires-python = ">=3.14"
 dependencies = []
 
 [project.scripts]
-capital-gains = "capital_gains.__main__:main"
+capital-gains = "capital_gains.cli:main"
 
 [build-system]
 requires = ["setuptools>=84.0.0", "wheel"]

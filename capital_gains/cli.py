@@ -1,4 +1,5 @@
 import json
+import sys
 from collections.abc import Iterable, Iterator
 from decimal import Decimal
 from io import Writer
@@ -56,3 +57,7 @@ def run(
             process_operations_batch(parse_json_line(line)),
             writer_stream,
         )
+
+
+def main() -> None:
+    run(sys.stdin, sys.stdout)
