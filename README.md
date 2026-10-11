@@ -27,7 +27,7 @@ or build the container
 docker image build --tag capital_gains --file=Containerfile .
 ```
 
-and run the tests inside it:
+and run the CLI inside it:
 
 ```sh
 docker container run --interactive capital_gains < entrada.txt
