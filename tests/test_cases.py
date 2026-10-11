@@ -9,9 +9,9 @@ test_cases = [
     (
         # case 1
         [
-            Operation(operation="buy", unit_cost=Money(Decimal("10.00")), quantity=100),
-            Operation(operation="sell", unit_cost=Money(Decimal("15.00")), quantity=50),
-            Operation(operation="sell", unit_cost=Money(Decimal("15.00")), quantity=50),
+            Operation(kind="buy", unit_cost=Money(Decimal("10.00")), quantity=100),
+            Operation(kind="sell", unit_cost=Money(Decimal("15.00")), quantity=50),
+            Operation(kind="sell", unit_cost=Money(Decimal("15.00")), quantity=50),
         ],
         [
             Money.zero(),
@@ -22,15 +22,9 @@ test_cases = [
     (
         # case 2
         [
-            Operation(
-                operation="buy", unit_cost=Money(Decimal("10.00")), quantity=10_000
-            ),
-            Operation(
-                operation="sell", unit_cost=Money(Decimal("20.00")), quantity=5_000
-            ),
-            Operation(
-                operation="sell", unit_cost=Money(Decimal("5.00")), quantity=5_000
-            ),
+            Operation(kind="buy", unit_cost=Money(Decimal("10.00")), quantity=10_000),
+            Operation(kind="sell", unit_cost=Money(Decimal("20.00")), quantity=5_000),
+            Operation(kind="sell", unit_cost=Money(Decimal("5.00")), quantity=5_000),
         ],
         [
             Money.zero(),
@@ -41,15 +35,9 @@ test_cases = [
     (
         # case 3
         [
-            Operation(
-                operation="buy", unit_cost=Money(Decimal("10.00")), quantity=10_000
-            ),
-            Operation(
-                operation="sell", unit_cost=Money(Decimal("5.00")), quantity=5_000
-            ),
-            Operation(
-                operation="sell", unit_cost=Money(Decimal("20.00")), quantity=3_000
-            ),
+            Operation(kind="buy", unit_cost=Money(Decimal("10.00")), quantity=10_000),
+            Operation(kind="sell", unit_cost=Money(Decimal("5.00")), quantity=5_000),
+            Operation(kind="sell", unit_cost=Money(Decimal("20.00")), quantity=3_000),
         ],
         [
             Money.zero(),
@@ -60,15 +48,9 @@ test_cases = [
     (
         # case 4
         [
-            Operation(
-                operation="buy", unit_cost=Money(Decimal("10.00")), quantity=10_000
-            ),
-            Operation(
-                operation="buy", unit_cost=Money(Decimal("25.00")), quantity=5_000
-            ),
-            Operation(
-                operation="sell", unit_cost=Money(Decimal("15.00")), quantity=10_000
-            ),
+            Operation(kind="buy", unit_cost=Money(Decimal("10.00")), quantity=10_000),
+            Operation(kind="buy", unit_cost=Money(Decimal("25.00")), quantity=5_000),
+            Operation(kind="sell", unit_cost=Money(Decimal("15.00")), quantity=10_000),
         ],
         [
             Money.zero(),
@@ -79,18 +61,10 @@ test_cases = [
     (
         # case 5
         [
-            Operation(
-                operation="buy", unit_cost=Money(Decimal("10.00")), quantity=10_000
-            ),
-            Operation(
-                operation="buy", unit_cost=Money(Decimal("25.00")), quantity=5_000
-            ),
-            Operation(
-                operation="sell", unit_cost=Money(Decimal("15.00")), quantity=10_000
-            ),
-            Operation(
-                operation="sell", unit_cost=Money(Decimal("25.00")), quantity=5_000
-            ),
+            Operation(kind="buy", unit_cost=Money(Decimal("10.00")), quantity=10_000),
+            Operation(kind="buy", unit_cost=Money(Decimal("25.00")), quantity=5_000),
+            Operation(kind="sell", unit_cost=Money(Decimal("15.00")), quantity=10_000),
+            Operation(kind="sell", unit_cost=Money(Decimal("25.00")), quantity=5_000),
         ],
         [
             Money.zero(),
@@ -102,21 +76,11 @@ test_cases = [
     (
         # case 6
         [
-            Operation(
-                operation="buy", unit_cost=Money(Decimal("10.00")), quantity=10_000
-            ),
-            Operation(
-                operation="sell", unit_cost=Money(Decimal("2.00")), quantity=5_000
-            ),
-            Operation(
-                operation="sell", unit_cost=Money(Decimal("20.00")), quantity=2_000
-            ),
-            Operation(
-                operation="sell", unit_cost=Money(Decimal("20.00")), quantity=2_000
-            ),
-            Operation(
-                operation="sell", unit_cost=Money(Decimal("25.00")), quantity=1_000
-            ),
+            Operation(kind="buy", unit_cost=Money(Decimal("10.00")), quantity=10_000),
+            Operation(kind="sell", unit_cost=Money(Decimal("2.00")), quantity=5_000),
+            Operation(kind="sell", unit_cost=Money(Decimal("20.00")), quantity=2_000),
+            Operation(kind="sell", unit_cost=Money(Decimal("20.00")), quantity=2_000),
+            Operation(kind="sell", unit_cost=Money(Decimal("25.00")), quantity=1_000),
         ],
         [
             Money.zero(),
@@ -129,33 +93,15 @@ test_cases = [
     (
         # case 7
         [
-            Operation(
-                operation="buy", unit_cost=Money(Decimal("10.00")), quantity=10_000
-            ),
-            Operation(
-                operation="sell", unit_cost=Money(Decimal("2.00")), quantity=5_000
-            ),
-            Operation(
-                operation="sell", unit_cost=Money(Decimal("20.00")), quantity=2_000
-            ),
-            Operation(
-                operation="sell", unit_cost=Money(Decimal("20.00")), quantity=2_000
-            ),
-            Operation(
-                operation="sell", unit_cost=Money(Decimal("25.00")), quantity=1_000
-            ),
-            Operation(
-                operation="buy", unit_cost=Money(Decimal("20.00")), quantity=10_000
-            ),
-            Operation(
-                operation="sell", unit_cost=Money(Decimal("15.00")), quantity=5_000
-            ),
-            Operation(
-                operation="sell", unit_cost=Money(Decimal("30.00")), quantity=4_350
-            ),
-            Operation(
-                operation="sell", unit_cost=Money(Decimal("30.00")), quantity=650
-            ),
+            Operation(kind="buy", unit_cost=Money(Decimal("10.00")), quantity=10_000),
+            Operation(kind="sell", unit_cost=Money(Decimal("2.00")), quantity=5_000),
+            Operation(kind="sell", unit_cost=Money(Decimal("20.00")), quantity=2_000),
+            Operation(kind="sell", unit_cost=Money(Decimal("20.00")), quantity=2_000),
+            Operation(kind="sell", unit_cost=Money(Decimal("25.00")), quantity=1_000),
+            Operation(kind="buy", unit_cost=Money(Decimal("20.00")), quantity=10_000),
+            Operation(kind="sell", unit_cost=Money(Decimal("15.00")), quantity=5_000),
+            Operation(kind="sell", unit_cost=Money(Decimal("30.00")), quantity=4_350),
+            Operation(kind="sell", unit_cost=Money(Decimal("30.00")), quantity=650),
         ],
         [
             Money.zero(),
@@ -172,18 +118,10 @@ test_cases = [
     (
         # case 8
         [
-            Operation(
-                operation="buy", unit_cost=Money(Decimal("10.00")), quantity=10_000
-            ),
-            Operation(
-                operation="sell", unit_cost=Money(Decimal("50.00")), quantity=10_000
-            ),
-            Operation(
-                operation="buy", unit_cost=Money(Decimal("20.00")), quantity=10_000
-            ),
-            Operation(
-                operation="sell", unit_cost=Money(Decimal("50.00")), quantity=10_000
-            ),
+            Operation(kind="buy", unit_cost=Money(Decimal("10.00")), quantity=10_000),
+            Operation(kind="sell", unit_cost=Money(Decimal("50.00")), quantity=10_000),
+            Operation(kind="buy", unit_cost=Money(Decimal("20.00")), quantity=10_000),
+            Operation(kind="sell", unit_cost=Money(Decimal("50.00")), quantity=10_000),
         ],
         [
             Money.zero(),

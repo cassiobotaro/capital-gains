@@ -4,7 +4,7 @@ from decimal import Decimal
 
 import pytest
 
-from capital_gains.cli import dump_json, parse_json_line, process_operations, readlines
+from capital_gains.cli import dump_json, parse_json_line, readlines, run
 from capital_gains.money import Money
 from capital_gains.tax import INITIAL_INVESTMENT, Operation, OperationResult
 
@@ -41,7 +41,7 @@ def test_parse_json_line_converts_to_domain_objects() -> None:
     operations = parse_json_line(input_json)
 
     assert operations == [
-        Operation(operation="buy", unit_cost=Money(Decimal("15.50")), quantity=100)
+        Operation(kind="buy", unit_cost=Money(Decimal("15.50")), quantity=100)
     ]
 
 
@@ -75,7 +75,7 @@ def test_process_operations_integrates_full_pipeline() -> None:
     reader_stream = io.StringIO("".join(input_data))
     writer_stream = io.StringIO()
 
-    process_operations(reader_stream, writer_stream)
+    run(reader_stream, writer_stream)
 
     writer_stream.seek(0)
     output_content = writer_stream.read()
