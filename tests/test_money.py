@@ -41,7 +41,7 @@ def test_same_currency_should_be_summable() -> None:
 def test_different_currency_should_not_be_summable() -> None:
     money1 = Money(Decimal("10.00"), "BRL")
     money2 = Money(Decimal("5.50"), "USD")
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Different currencies"):
         _ = money1 + money2
 
 
@@ -54,14 +54,15 @@ def test_same_currency_should_be_subtractable() -> None:
 def test_different_currency_should_not_be_subtractable() -> None:
     money1 = Money(Decimal("10.00"), "BRL")
     money2 = Money(Decimal("5.00"), "USD")
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Different currencies"):
         _ = money1 - money2
 
 
 def test_should_be_negatable() -> None:
     money = Money(Decimal("10.00"), "BRL")
     assert -money == Money(Decimal("-10.00"), "BRL")
-    assert -(-money) == money
+    negated = -money
+    assert -negated == money
     assert -Money.zero() == Money.zero()
 
 
@@ -79,7 +80,7 @@ def test_different_type_should_not_be_summable_or_subtractable() -> None:
 
 
 @pytest.mark.parametrize(
-    "scalar, expected",
+    ("scalar", "expected"),
     [
         (2, Decimal("20.00")),
         (Decimal("0.5"), Decimal("5.00")),
@@ -94,10 +95,10 @@ def test_should_be_able_to_multiply_money_by_scalar(
 
 
 @pytest.mark.parametrize(
-    "scalar, expected",
+    ("scalar", "expected"),
     [
         (2, Decimal("5.00")),
-        (Decimal("1.5"), Decimal("6.67")),
+        (Decimal("0.5"), Decimal("20.00")),
         (Decimal("1.5"), Decimal("6.67")),
     ],
 )
@@ -128,19 +129,19 @@ def test_same_currency_should_be_comparable() -> None:
     assert money2 < money1
     assert money2 <= money1
     assert money1 == money3
-    assert not (money1 != money3)
+    assert money1 != money2
 
 
 def test_different_currency_should_not_be_comparable() -> None:
     money1 = Money(Decimal("10.00"), "BRL")
     money2 = Money(Decimal("5.00"), "USD")
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Different currencies"):
         _ = money1 > money2
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Different currencies"):
         _ = money1 < money2
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Different currencies"):
         _ = money1 >= money2
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Different currencies"):
         _ = money1 <= money2
 
 

@@ -133,7 +133,7 @@ CASES = [
 ]
 
 
-@pytest.mark.parametrize("operations_batch, expected_taxes", CASES)
+@pytest.mark.parametrize(("operations_batch", "expected_taxes"), CASES)
 def test_process_operations_taxes(
     operations_batch: list[Operation], expected_taxes: list[Money]
 ) -> None:

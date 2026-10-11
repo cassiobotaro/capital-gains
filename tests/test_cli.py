@@ -10,7 +10,7 @@ from capital_gains.tax import INITIAL_INVESTMENT, Operation, OperationResult
 
 
 @pytest.mark.parametrize(
-    "input_data, expected_output",
+    ("input_data", "expected_output"),
     [
         (
             # Input with empty and whitespace-only lines
