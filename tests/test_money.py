@@ -55,7 +55,7 @@ class TestMoney:
         "scalar, expected",
         [
             (2, Decimal("20.00")),
-            (0.5, Decimal("5.00")),
+            (Decimal("0.5"), Decimal("5.00")),
             (Decimal("1.5"), Decimal("15.00")),
         ],
     )
@@ -69,7 +69,7 @@ class TestMoney:
         "scalar, expected",
         [
             (2, Decimal("5.00")),
-            (1.5, Decimal("6.67")),
+            (Decimal("1.5"), Decimal("6.67")),
             (Decimal("1.5"), Decimal("6.67")),
         ],
     )
@@ -77,6 +77,16 @@ class TestMoney:
         self, scalar: Scalar, expected: Decimal
     ) -> None:
         assert Money(Decimal("10.00"), "BRL") / scalar == Money(expected, "BRL")
+
+    def test_should_reject_float_scalars(self) -> None:
+        money = Money(Decimal("10.00"), "BRL")
+
+        with pytest.raises(TypeError):
+            _ = money * 0.5  # ty: ignore[unsupported-operator]
+        with pytest.raises(TypeError):
+            _ = 0.5 * money  # ty: ignore[unsupported-operator]
+        with pytest.raises(TypeError):
+            _ = money / 0.5  # ty: ignore[unsupported-operator]
 
     def test_same_currency_should_be_comparable(self) -> None:
         money1 = Money(Decimal("10.00"), "BRL")
