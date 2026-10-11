@@ -1,13 +1,52 @@
 from decimal import Decimal
 
+import pytest
+
 from capital_gains.money import Money
 from capital_gains.tax import (
+    EXEMPTION_LIMIT,
     TAX_RATE,
     InvestmentState,
     Operation,
+    calculate_tax,
     process_operation,
     process_operations_batch,
 )
+
+
+@pytest.mark.parametrize(
+    "taxable_profit, total_operation_value, expected_tax",
+    [
+        pytest.param(
+            Money(Decimal("1000.00")),
+            EXEMPTION_LIMIT + Money(Decimal("0.01")),
+            Money(Decimal("200.00")),
+            id="profit-above-limit-is-taxed",
+        ),
+        pytest.param(
+            Money(Decimal("1000.00")),
+            EXEMPTION_LIMIT,
+            Money.zero(),
+            id="profit-at-limit-is-exempt",
+        ),
+        pytest.param(
+            Money(Decimal("1000.00")),
+            EXEMPTION_LIMIT - Money(Decimal("0.01")),
+            Money.zero(),
+            id="profit-below-limit-is-exempt",
+        ),
+        pytest.param(
+            Money.zero(),
+            EXEMPTION_LIMIT + Money(Decimal("0.01")),
+            Money.zero(),
+            id="no-profit-above-limit-is-untaxed",
+        ),
+    ],
+)
+def test_calculate_tax(
+    taxable_profit: Money, total_operation_value: Money, expected_tax: Money
+) -> None:
+    assert calculate_tax(taxable_profit, total_operation_value) == expected_tax
 
 
 def test_first_buy_sets_initial_weighted_average() -> None:

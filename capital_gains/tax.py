@@ -44,36 +44,29 @@ def handle_buy(state: InvestmentState, operation: Operation) -> OperationResult:
     )
 
 
+def calculate_tax(taxable_profit: Money, total_operation_value: Money) -> Money:
+    if taxable_profit > Money.zero() and total_operation_value > EXEMPTION_LIMIT:
+        return taxable_profit * TAX_RATE
+    return Money.zero()
+
+
 def handle_sell(state: InvestmentState, operation: Operation) -> OperationResult:
-    def calculate_new_loss(current_loss: Money, profit: Money) -> Money:
-        return max(Money.zero(), current_loss - profit)
-
-    def calculate_taxable_profit(current_loss: Money, profit: Money) -> Money:
-        profit_after_deduction = profit - current_loss
-        return max(Money.zero(), profit_after_deduction)
-
-    def calculate_tax(taxable_profit: Money, total_operation_value: Money) -> Money:
-        if taxable_profit > Money.zero() and total_operation_value > EXEMPTION_LIMIT:
-            return taxable_profit * TAX_RATE
-        return Money.zero()
-
     price_diff_per_share = operation.unit_cost - state.weighted_average_price
     gross_profit = price_diff_per_share * operation.quantity
     total_operation_value = operation.unit_cost * operation.quantity
 
-    new_accumulated_loss = calculate_new_loss(state.accumulated_loss, gross_profit)
-    taxable_profit = calculate_taxable_profit(state.accumulated_loss, gross_profit)
-    tax = calculate_tax(taxable_profit, total_operation_value)
-
-    new_quantity = state.quantity - operation.quantity
+    net_profit = gross_profit - state.accumulated_loss
+    taxable_profit = max(Money.zero(), net_profit)
+    new_accumulated_loss = max(Money.zero(), -net_profit)
 
     new_state = InvestmentState(
-        quantity=new_quantity,
+        quantity=state.quantity - operation.quantity,
         weighted_average_price=state.weighted_average_price,
         accumulated_loss=new_accumulated_loss,
     )
-
-    return OperationResult(new_state=new_state, tax=tax)
+    return OperationResult(
+        new_state=new_state, tax=calculate_tax(taxable_profit, total_operation_value)
+    )
 
 
 def process_operation(state: InvestmentState, operation: Operation) -> OperationResult:
