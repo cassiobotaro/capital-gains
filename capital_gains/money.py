@@ -1,5 +1,4 @@
-from collections.abc import Sequence
-from dataclasses import InitVar, dataclass, field
+from dataclasses import dataclass
 from decimal import Decimal
 from functools import total_ordering
 
@@ -7,19 +6,16 @@ TWOPLACES = Decimal("0.01")
 DEFAULT_CURRENCY = "BRL"
 
 type Scalar = int | Decimal
-type DecimalConvertible = Decimal | float | str | tuple[int, Sequence[int], int]
 
 
 @dataclass(frozen=True)
 @total_ordering
 class Money:
-    raw_amount: InitVar[DecimalConvertible]
-    amount: Decimal = field(init=False)
+    amount: Decimal
     currency: str = DEFAULT_CURRENCY
 
-    def __post_init__(self, raw_amount: DecimalConvertible) -> None:
-        quantized_amount = Decimal(raw_amount).quantize(TWOPLACES)
-        object.__setattr__(self, "amount", quantized_amount)
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "amount", self.amount.quantize(TWOPLACES))
 
     def _assert_same_currency_as(self, other: Money) -> None:
         if self.currency != other.currency:
@@ -52,4 +48,4 @@ class Money:
 
     @classmethod
     def zero(cls, currency: str = DEFAULT_CURRENCY) -> Money:
-        return cls("0.00", currency)
+        return cls(Decimal("0.00"), currency)

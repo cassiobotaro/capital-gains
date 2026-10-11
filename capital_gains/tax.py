@@ -6,7 +6,7 @@ from typing import Literal, assert_never
 from capital_gains.money import Money
 
 TAX_RATE = Decimal("0.20")  # 20%
-EXEMPTION_LIMIT = Money("20000.00")  # R$ 20.000,00
+EXEMPTION_LIMIT = Money(Decimal("20000.00"))  # R$ 20.000,00
 
 
 @dataclass(frozen=True)
