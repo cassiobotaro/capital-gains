@@ -65,16 +65,10 @@ def test_first_buy_sets_initial_weighted_average() -> None:
     result = process_operation(initial_state, operation)
 
     # assert
-    assert result.tax == Money.zero(), "Tax on purchase must be zero."
-    assert result.new_state.quantity == 10, (
-        "Quantity after purchase should match operation."
-    )
-    assert result.new_state.weighted_average_price == Money(Decimal("20.00")), (
-        "Weighted average price should match unit cost on first buy."
-    )
-    assert result.new_state.accumulated_loss == Money.zero(), (
-        "Accumulated loss should remain zero after purchase."
-    )
+    assert result.tax == Money.zero()
+    assert result.new_state.quantity == 10
+    assert result.new_state.weighted_average_price == Money(Decimal("20.00"))
+    assert result.new_state.accumulated_loss == Money.zero()
 
 
 def test_multiple_buys_calculate_weighted_average() -> None:
@@ -120,9 +114,7 @@ def test_sell_with_simple_profit_above_exemption_limit() -> None:
     assert result.new_state.weighted_average_price == Money(Decimal("30.00"))
     assert result.new_state.accumulated_loss == Money.zero()
     # A verificação usa o resultado do cálculo dinâmico:
-    assert result.tax == expected_tax, (
-        f"Tax must be {TAX_RATE * 100}% ({expected_tax_amount}) of the profit."
-    )
+    assert result.tax == expected_tax
 
 
 def test_sell_with_exemption_due_to_low_volume() -> None:
@@ -141,12 +133,8 @@ def test_sell_with_exemption_due_to_low_volume() -> None:
     result = process_operation(initial_state, operation)
 
     # assert
-    assert result.new_state.quantity == 0, (
-        "Share quantity should be zero after the sale."
-    )
-    assert result.new_state.accumulated_loss == Money.zero(), (
-        "Accumulated loss should remain zero."
-    )
+    assert result.new_state.quantity == 0
+    assert result.new_state.accumulated_loss == Money.zero()
     assert result.tax == expected_tax, "Tax must be zero due to the exemption rule."
 
 
@@ -170,16 +158,10 @@ def test_sell_with_loss_generates_accumulated_loss() -> None:
     result = process_operation(initial_state, operation)
 
     # Assert
-    assert result.new_state.quantity == 0, "Share quantity should be reduced."
-    assert result.tax == Money.zero(), (
-        "Tax must be zero when operation results in a loss."
-    )
-    assert result.new_state.accumulated_loss == expected_loss, (
-        "Gross loss must be recorded as accumulated loss."
-    )
-    assert result.new_state.weighted_average_price == Money(Decimal("50.00")), (
-        "WAP should not change."
-    )
+    assert result.new_state.quantity == 0
+    assert result.tax == Money.zero()
+    assert result.new_state.accumulated_loss == expected_loss
+    assert result.new_state.weighted_average_price == Money(Decimal("50.00"))
 
 
 def test_sell_with_profit_fully_compensated_by_accumulated_loss() -> None:
@@ -204,15 +186,9 @@ def test_sell_with_profit_fully_compensated_by_accumulated_loss() -> None:
     assert result.tax == Money.zero(), (
         "Tax must be zero when profit is fully compensated by loss carryforward."
     )
-    assert result.new_state.accumulated_loss == expected_remaining_loss, (
-        "Accumulated loss must be correctly reduced."
-    )
-    assert result.new_state.quantity == 0, (
-        "Share quantity should be zero after the sale."
-    )
-    assert result.new_state.weighted_average_price == Money(Decimal("10.00")), (
-        "WAP should not change."
-    )
+    assert result.new_state.accumulated_loss == expected_remaining_loss
+    assert result.new_state.quantity == 0
+    assert result.new_state.weighted_average_price == Money(Decimal("10.00"))
 
 
 def test_sell_with_profit_partially_compensated_by_accumulated_loss() -> None:
@@ -234,12 +210,8 @@ def test_sell_with_profit_partially_compensated_by_accumulated_loss() -> None:
     result = process_operation(initial_state, operation)
 
     # assert
-    assert result.tax == expected_tax, (
-        "Tax must be 20% of the net profit (after partial compensation)."
-    )
-    assert result.new_state.accumulated_loss == Money.zero(), (
-        "Accumulated loss must be reset to zero when profit is taxable."
-    )
+    assert result.tax == expected_tax
+    assert result.new_state.accumulated_loss == Money.zero()
     assert result.new_state.quantity == 0
     assert result.new_state.weighted_average_price == Money(Decimal("30.00"))
 
@@ -294,9 +266,7 @@ def test_sell_above_exemption_limit_but_net_profit_is_zero() -> None:
     assert result.tax == expected_tax, (
         "Tax must be zero if net profit is zero/negative, regardless of sale volume."
     )
-    assert result.new_state.accumulated_loss == expected_remaining_loss, (
-        "Accumulated loss must be correctly reduced by the gross profit."
-    )
+    assert result.new_state.accumulated_loss == expected_remaining_loss
     assert result.new_state.quantity == 0
 
 
@@ -384,18 +354,12 @@ def test_sell_partial_with_loss_accumulates_loss() -> None:
     result = process_operation(initial_state, operation)
 
     # assert
-    assert result.tax == Money.zero(), (
-        "Tax must be zero when operation results in a loss."
-    )
-    assert result.new_state.quantity == expected_quantity, (
-        "Remaining quantity must be correct."
-    )
+    assert result.tax == Money.zero()
+    assert result.new_state.quantity == expected_quantity
     assert (
         result.new_state.weighted_average_price == initial_state.weighted_average_price
     ), "Weighted average price must not change after a sell operation."
-    assert result.new_state.accumulated_loss == expected_accumulated_loss, (
-        "New loss must be correctly added to the accumulated loss."
-    )
+    assert result.new_state.accumulated_loss == expected_accumulated_loss
 
 
 def test_sell_partial_with_profit_above_tax_limit() -> None:
@@ -417,16 +381,12 @@ def test_sell_partial_with_profit_above_tax_limit() -> None:
     result = process_operation(initial_state, operation)
 
     # assert
-    assert result.tax == expected_tax, "Tax must be 20% of the gross profit."
-    assert result.new_state.quantity == expected_quantity, (
-        "Remaining quantity must be correct."
-    )
+    assert result.tax == expected_tax
+    assert result.new_state.quantity == expected_quantity
     assert (
         result.new_state.weighted_average_price == initial_state.weighted_average_price
     ), "Weighted average price must not change after a sell operation."
-    assert result.new_state.accumulated_loss == Money.zero(), (
-        "Accumulated loss must remain zero as there was profit."
-    )
+    assert result.new_state.accumulated_loss == Money.zero()
 
 
 def test_sell_with_profit_exempt_and_accumulated_loss_fully_zeroed() -> None:
@@ -454,9 +414,7 @@ def test_sell_with_profit_exempt_and_accumulated_loss_fully_zeroed() -> None:
     assert result.new_state.accumulated_loss == expected_remaining_loss, (
         "Accumulated loss must be fully zeroed by the exempt profit."
     )
-    assert result.new_state.quantity == 0, (
-        "Share quantity should be zero after the sale."
-    )
+    assert result.new_state.quantity == 0
 
 
 def test_buy_zero_quantity_does_not_change_state() -> None:
@@ -481,16 +439,10 @@ def test_buy_zero_quantity_does_not_change_state() -> None:
     result = process_operation(initial_state, operation)
 
     # assert
-    assert result.tax == expected_tax, "Tax must be zero on a buy operation."
-    assert result.new_state.quantity == expected_quantity, (
-        "Quantity must remain unchanged."
-    )
-    assert result.new_state.weighted_average_price == expected_wap, (
-        "Weighted average price must remain unchanged when quantity bought is zero."
-    )
-    assert result.new_state.accumulated_loss == expected_loss, (
-        "Accumulated loss must remain unchanged."
-    )
+    assert result.tax == expected_tax
+    assert result.new_state.quantity == expected_quantity
+    assert result.new_state.weighted_average_price == expected_wap
+    assert result.new_state.accumulated_loss == expected_loss
 
 
 def test_full_sequence_of_operations_with_final_taxable_sale() -> None:
@@ -513,9 +465,7 @@ def test_full_sequence_of_operations_with_final_taxable_sale() -> None:
     result4 = process_operation(current_state, op4)
     current_state = result4.new_state
     assert result4.tax == Money.zero(), "Tax must be zero due to low volume exemption."
-    assert current_state.accumulated_loss == Money.zero(), (
-        "Accumulated loss must be zeroed."
-    )
+    assert current_state.accumulated_loss == Money.zero()
 
     op5 = Operation(kind="buy", unit_cost=Money(Decimal("20.00")), quantity=500)
     result5 = process_operation(current_state, op5)
