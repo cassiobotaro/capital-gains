@@ -38,6 +38,9 @@ class Money:
         self._assert_same_currency_as(other)
         return Money(self.amount - other.amount, self.currency)
 
+    def __neg__(self) -> Money:
+        return Money(-self.amount, self.currency)
+
     def __mul__(self, scalar: Scalar) -> Money:
         if not isinstance(scalar, SCALAR_TYPES):
             return NotImplemented

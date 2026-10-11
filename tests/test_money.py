@@ -51,6 +51,12 @@ class TestMoney:
         with pytest.raises(ValueError):
             _ = money1 - money2
 
+    def test_should_be_negatable(self) -> None:
+        money = Money(Decimal("10.00"), "BRL")
+        assert -money == Money(Decimal("-10.00"), "BRL")
+        assert -(-money) == money
+        assert -Money.zero() == Money.zero()
+
     def test_different_type_should_not_be_summable_or_subtractable(self) -> None:
         money = Money(Decimal("10.00"), "BRL")
         an_object = 42
