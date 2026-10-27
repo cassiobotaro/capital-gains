@@ -66,7 +66,7 @@ The logic for calculating and applying the accumulated loss was overly complex d
 
 ### Solution
 
-The complexity in the loss calculation logic was reduced by refactoring the conditional statements into a single, more concise mathematical expression: Math.max(0, loss + (result * -1)). This change simplifies the code by ensuring that the accumulated loss is correctly offset by any profits (result), but never goes below zero, eliminating the need for complex branch logic and improving the method's readability and simplicity. Later, the taxable profit and the carried-forward loss were recognised as the same net value with opposite signs, so `handle_sell` computes `net = gross_profit - accumulated_loss` once and derives `taxable = max(0, net)` and `new_loss = max(0, -net)` from it. The former nested helpers closed over nothing, so `calculate_tax` became a module-level function with its own tests.
+The complexity in the loss calculation logic was reduced by refactoring the conditional statements into a single, more concise mathematical expression: `max(0, loss - result)`. This change simplifies the code by ensuring that the accumulated loss is correctly offset by any profits (result), but never goes below zero, eliminating the need for complex branch logic and improving the method's readability and simplicity. Later, the taxable profit and the carried-forward loss were recognised as the same net value with opposite signs, so `handle_sell` computes `net = gross_profit - accumulated_loss` once and derives `taxable = max(0, net)` and `new_loss = max(0, -net)` from it. The former nested helpers closed over nothing, so `calculate_tax` became a module-level function with its own tests.
 
 ---
 
