@@ -5,8 +5,7 @@ from functools import total_ordering
 TWOPLACES = Decimal("0.01")
 DEFAULT_CURRENCY = "BRL"
 
-type Scalar = int | Decimal
-SCALAR_TYPES = (int, Decimal)
+Scalar = int | Decimal
 
 
 @dataclass(frozen=True)
@@ -42,7 +41,7 @@ class Money:
         return Money(-self.amount, self.currency)
 
     def __mul__(self, scalar: Scalar) -> Money:
-        if not isinstance(scalar, SCALAR_TYPES):
+        if not isinstance(scalar, Scalar):
             return NotImplemented
 
         return Money(self.amount * scalar, self.currency)
@@ -50,7 +49,7 @@ class Money:
     __rmul__ = __mul__
 
     def __truediv__(self, scalar: Scalar) -> Money:
-        if not isinstance(scalar, SCALAR_TYPES):
+        if not isinstance(scalar, Scalar):
             return NotImplemented
 
         return Money(self.amount / scalar, self.currency)
