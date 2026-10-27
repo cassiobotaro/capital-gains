@@ -3,7 +3,7 @@ name = "capital-gains"
 version = "0.1.0"
 description = "A Command-Line Interface (CLI) for calculating the tax due on profits or losses from stock market operations (or equity trading)"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.15"
 dependencies = []
 
 [project.scripts]
