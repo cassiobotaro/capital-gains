@@ -152,3 +152,13 @@ deque(
 The explicit `for` loop was kept. It is equally lazy, since `readlines` is a generator and each line is parsed, processed and written before the next one is read, so the memory footprint is the same. The loop reads top to bottom without requiring the reader to know the `deque(maxlen=0)` idiom, and it does not need `functools.partial` to bind the output stream. The functional version is recorded here rather than left as a comment in the code, where it had already drifted out of sync with the function names it referenced.
 
 ---
+
+### Problem
+
+The specification states that an operation whose total value is at most R$ 20,000.00 pays no tax, and that past losses must be deducted from later profits, but it does not say whether the profit of an exempt sale consumes the accumulated loss. None of the specification's examples distinguishes the two readings. They diverge as soon as an exempt profitable sale sits between a loss and a taxable sale: buying 10,000 shares at 10.00, selling 1,000 at 5.00 (loss of 5,000), selling 1,000 at 15.00 (exempt, profit of 5,000) and then selling 5,000 at 20.00 yields a final tax of 10,000.00 if the exempt profit consumed the loss, or 9,000.00 if the loss was kept for the taxable sale. Brazilian tax rules follow the second reading, since an exempt gain has no taxable base to offset.
+
+### Solution
+
+The exempt profit consumes the accumulated loss. `handle_sell` computes `net = gross_profit - accumulated_loss` for every sale and applies the exemption only when deciding the tax, so the loss carried forward is the same whether or not the sale was exempt. This keeps the loss rule independent from the exemption rule, which matches the specification's wording that the total operation value decides only whether tax is paid. The trade-off is a departure from Brazilian law, which the specification already simplifies elsewhere by applying the R$ 20,000.00 limit per operation instead of to the total sales of the month. Following the law would mean deducting the loss only in sales above the exemption limit, a change confined to `handle_sell`; the current behaviour is pinned by `test_sell_with_profit_exempt_but_compensating_loss`.
+
+---
