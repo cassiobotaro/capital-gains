@@ -4,7 +4,7 @@ from decimal import Decimal
 
 import pytest
 
-from capital_gains.cli import dump_json, parse_json_line, readlines, run
+from capital_gains.cli import dump_json, lines_until_blank, parse_json_line, run
 from capital_gains.money import Money
 from capital_gains.tax import INITIAL_INVESTMENT, Operation, OperationResult
 
@@ -13,26 +13,31 @@ from capital_gains.tax import INITIAL_INVESTMENT, Operation, OperationResult
     ("input_data", "expected_output"),
     [
         (
-            # Input with empty and whitespace-only lines
-            ["op1\n", "  \n", "op2\n", "\t", "op3"],
-            ["op1\n", "op2\n", "op3"],
+            # Lines after the first blank line are not read
+            ["op1\n", "op2\n", "\n", "op3\n"],
+            ["op1\n", "op2\n"],
         ),
         (
-            # Simple input
-            ["line A", "line B"],
-            ["line A", "line B"],
+            # A whitespace-only line also ends the input
+            ["op1\n", " \t\n", "op2\n"],
+            ["op1\n"],
         ),
         (
-            # Input with garbage lines
-            ["\n", " "],
+            # Input without a blank line is read until EOF
+            ["line A\n", "line B"],
+            ["line A\n", "line B"],
+        ),
+        (
+            # Input starting with a blank line is empty
+            ["\n", "op1\n"],
             [],
         ),
     ],
 )
-def test_readlines_filters_empty_and_whitespace(
+def test_lines_until_blank_stops_at_first_blank_line(
     input_data: list[str], expected_output: list[str]
 ) -> None:
-    assert list(readlines(input_data)) == expected_output
+    assert list(lines_until_blank(input_data)) == expected_output
 
 
 def test_parse_json_line_converts_to_domain_objects() -> None:
@@ -79,8 +84,9 @@ def test_dump_json_serializes_and_adds_newline() -> None:
 def test_process_operations_integrates_full_pipeline() -> None:
     input_data = [
         '[{"operation":"buy", "unit-cost":10.00, "quantity": 1000}]\n',
-        "\n",  # blank line, skipped
         '[{"operation":"sell", "unit-cost":50.00, "quantity": 10}]\n',
+        "\n",  # blank line, ends the input
+        "not json, never parsed\n",
     ]
     reader_stream = io.StringIO("".join(input_data))
     writer_stream = io.StringIO()

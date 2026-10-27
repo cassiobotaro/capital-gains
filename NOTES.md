@@ -162,3 +162,13 @@ The specification states that an operation whose total value is at most R$ 20,00
 The exempt profit consumes the accumulated loss. `handle_sell` computes `net = gross_profit - accumulated_loss` for every sale and applies the exemption only when deciding the tax, so the loss carried forward is the same whether or not the sale was exempt. This keeps the loss rule independent from the exemption rule, which matches the specification's wording that the total operation value decides only whether tax is paid. The trade-off is a departure from Brazilian law, which the specification already simplifies elsewhere by applying the R$ 20,000.00 limit per operation instead of to the total sales of the month. Following the law would mean deducting the loss only in sales above the exemption limit, a change confined to `handle_sell`; the current behaviour is pinned by `test_sell_with_profit_exempt_but_compensating_loss`.
 
 ---
+
+### Problem
+
+The specification states that the last line of the input is an empty line, and its FAQ expects the user to type each line in the terminal and press Enter. The CLI used to skip blank lines and stop only at end of file, which works with input redirection but leaves an interactive session waiting after the empty line until the user sends EOF with Ctrl-D.
+
+### Solution
+
+The empty line ends the input. `lines_until_blank` wraps the reader in `itertools.takewhile(str.strip, ...)`, so the first line that is empty or holds only whitespace stops the processing, and end of file still stops it when the input has no trailing empty line. The trade-off is that anything after an empty line in the middle of the input is ignored, which the specification rules out by placing the empty line last.
+
+---

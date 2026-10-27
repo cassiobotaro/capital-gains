@@ -3,6 +3,7 @@ import sys
 from collections.abc import Iterable, Iterator
 from decimal import Decimal
 from io import Writer
+from itertools import takewhile
 from typing import TypedDict
 
 from .money import Money
@@ -23,10 +24,8 @@ RawOperation = TypedDict(
 )
 
 
-def readlines(reader: Iterable[str]) -> Iterator[str]:
-    for line in reader:
-        if line.strip():
-            yield line
+def lines_until_blank(reader: Iterable[str]) -> Iterator[str]:
+    return takewhile(str.strip, reader)
 
 
 def parse_json_line(line: str) -> list[Operation]:
@@ -52,7 +51,7 @@ def run(
     reader_stream: Iterable[str],
     writer_stream: Writer[str],
 ) -> None:
-    for line in readlines(reader_stream):
+    for line in lines_until_blank(reader_stream):
         dump_json(
             process_operations_batch(parse_json_line(line)),
             writer_stream,
