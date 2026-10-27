@@ -41,7 +41,7 @@ def test_same_currency_should_be_summable() -> None:
 def test_different_currency_should_not_be_summable() -> None:
     money1 = Money(Decimal("10.00"), "BRL")
     money2 = Money(Decimal("5.50"), "USD")
-    with pytest.raises(ValueError, match="Different currencies"):
+    with pytest.raises(TypeError, match="Different currencies"):
         _ = money1 + money2
 
 
@@ -54,7 +54,7 @@ def test_same_currency_should_be_subtractable() -> None:
 def test_different_currency_should_not_be_subtractable() -> None:
     money1 = Money(Decimal("10.00"), "BRL")
     money2 = Money(Decimal("5.00"), "USD")
-    with pytest.raises(ValueError, match="Different currencies"):
+    with pytest.raises(TypeError, match="Different currencies"):
         _ = money1 - money2
 
 
@@ -135,13 +135,13 @@ def test_same_currency_should_be_comparable() -> None:
 def test_different_currency_should_not_be_comparable() -> None:
     money1 = Money(Decimal("10.00"), "BRL")
     money2 = Money(Decimal("5.00"), "USD")
-    with pytest.raises(ValueError, match="Different currencies"):
+    with pytest.raises(TypeError, match="Different currencies"):
         _ = money1 > money2
-    with pytest.raises(ValueError, match="Different currencies"):
+    with pytest.raises(TypeError, match="Different currencies"):
         _ = money1 < money2
-    with pytest.raises(ValueError, match="Different currencies"):
+    with pytest.raises(TypeError, match="Different currencies"):
         _ = money1 >= money2
-    with pytest.raises(ValueError, match="Different currencies"):
+    with pytest.raises(TypeError, match="Different currencies"):
         _ = money1 <= money2
 
 

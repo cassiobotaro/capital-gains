@@ -19,7 +19,7 @@ class Money:
 
     def _assert_same_currency_as(self, other: Money) -> None:
         if self.currency != other.currency:
-            raise ValueError(
+            raise TypeError(
                 f"Different currencies: {self.currency} and {other.currency}"
             )
 
