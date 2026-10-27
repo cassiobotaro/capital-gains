@@ -42,7 +42,7 @@ Crucially, each operation processing step takes an initial investment state and 
 
 ### Problem
 
-Binary floating point cannot represent most decimal fractions exactly. `Decimal(1.005)` is `1.00499999...`, so a `Money` built from or multiplied by a float can round the wrong way before the two-place rounding ever runs. The CLI already converts the JSON input through `str` before building a `Decimal`, but nothing stopped another caller from passing a float directly.
+Binary floating point cannot represent most decimal fractions exactly. `Decimal(1.005)` is `1.00499999...`, so a `Money` built from or multiplied by a float can round the wrong way before the two-place rounding ever runs. The CLI parses the JSON input with `parse_float=Decimal`, so a number never passes through `float` on its way in, but nothing stopped another caller from passing a float directly.
 
 ### Solution
 

@@ -17,7 +17,7 @@ RawOperation = TypedDict(
     "RawOperation",
     {
         "operation": OperationKind,
-        "unit-cost": float,
+        "unit-cost": Decimal | int,
         "quantity": int,
     },
 )
@@ -30,11 +30,11 @@ def readlines(reader: Iterable[str]) -> Iterator[str]:
 
 
 def parse_json_line(line: str) -> list[Operation]:
-    raw_ops_list: list[RawOperation] = json.loads(line)
+    raw_ops_list: list[RawOperation] = json.loads(line, parse_float=Decimal)
     return [
         Operation(
             kind=raw["operation"],
-            unit_cost=Money(Decimal(str(raw["unit-cost"]))),
+            unit_cost=Money(Decimal(raw["unit-cost"])),
             quantity=raw["quantity"],
         )
         for raw in raw_ops_list
