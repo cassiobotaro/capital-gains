@@ -21,6 +21,7 @@ RawOperation = TypedDict(
         "unit-cost": Decimal | int,
         "quantity": int,
     },
+    closed=True,
 )
 
 
