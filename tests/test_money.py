@@ -159,28 +159,21 @@ def test_different_type_should_not_be_comparable() -> None:
 
 
 def test_zero_returns_correct_amount() -> None:
-    # act
     zero_money = Money.zero()
 
-    # assert
     assert zero_money.amount == Decimal("0.00")
 
 
 def test_zero_retains_default_currency() -> None:
-    # act
     zero_money = Money.zero()
 
-    # assert
     assert zero_money.currency == DEFAULT_CURRENCY
 
 
 def test_money_zero_accepts_custom_currency() -> None:
-    # arrange
     custom_currency = "USD"
 
-    # act
     zero_usd = Money.zero(currency=custom_currency)
 
-    # assert
     assert zero_usd.amount == Decimal("0.00")
     assert zero_usd.currency == custom_currency
