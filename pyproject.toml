@@ -10,7 +10,7 @@ dependencies = []
 capital-gains = "capital_gains.cli:main"
 
 [build-system]
-requires = ["setuptools>=84.0.0", "wheel"]
+requires = ["setuptools>=84.2.1", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [dependency-groups]
